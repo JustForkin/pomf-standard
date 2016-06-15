@@ -15,20 +15,29 @@ File to upload; multiple values supported.
 #### gyazo:
 Content-Type: text/plain
 Complete URLs to uploaded files in the same order as the input files, separated by newlines. Does not have a trailing newline (Pomf1 compat version).
-Example output: 'https://example.com/foobar.jpg\nhttps://example.com/qweasd.txt'
+Example output: 
+```txt
+'https://example.com/foobar.jpg\nhttps://example.com/qweasd.txt'
+```
 
 #### text:
 Content-Type: text/plain
 Complete URLs to uploaded files in the same order as input files. Each line ends in a newline (Unix style).
-Example output: 'https://example.com/foobar.jpg\nhttps://example.com/qweasd.txt\n'
+Example output: 
+```txt
+'https://example.com/foobar.jpg\nhttps://example.com/qweasd.txt\n'
+```
 Protip: if you include input names of uploaded files, how do you handle e.g. newlines in filenames?
 
 #### html:
 Content-Type: text/html
 A HTML page containing links to uploaded files. Can be anything and is primarily meant to be shown to a human user.
-Example output: '<a href="https://example.com/foobar.jpg">https://example.com/foobar.jpg</a><br /><a href="https://example.com/qweasd.txt">https://example.com/qweasd.txt</a><br />'
+Example output: 
+```html
+'<a href="https://example.com/foobar.jpg">https://example.com/foobar.jpg</a><br /><a href="https://example.com/qweasd.txt">https://example.com/qweasd.txt</a><br />'
+```
 
-####		json:
+#### json:
 Content-Type: application/json
 ```json
 Schema:
@@ -47,15 +56,20 @@ Schema:
 }
 ```
 Clients *must not* assume a specific ordering of keys in objects nor any presence/absence of whitespace (outside strings); regex is not a good way to parse this.
-Example output: ```json '{"success": true, "files": [{"name": "cat.jpg", "url": "https://example.com/foobar.jpg", "hash": "8d26e24aabb26c02b5c9a9e102308af2a3597a49", "size": 44294}, {"name": "file.txt", "url": "https://example.com/qweasd.txt", "hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709", "size": 0}]}' ```
+Example output: 
+```json 
+'{"success": true, "files": [{"name": "cat.jpg", "url": "https://example.com/foobar.jpg", "hash": "8d26e24aabb26c02b5c9a9e102308af2a3597a49", "size": 44294}, {"name": "file.txt", "url": "https://example.com/qweasd.txt", "hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709", "size": 0}]}' 
+``` 
 
-####		csv:
+#### csv:
 Content-Type: text/csv
 A CSV document listing the name, url, hash and size of uploaded files (same meanings as in the JSON response).
 Dialect: delimiter=',', quotechar='"'
 Headers are written on the first line.
-Example output: 'name,url,hash,size\ncat.jpg,https://example.com/foobar.jpg,8d26e24aabb26c02b5c9a9e102308af2a3597a49,44294\nfile.txt,https://example.com/qweasd.txt,da39a3ee5e6b4b0d3255bfef95601890afd80709,0\n'
-
+Example output: 
+```csv
+'name,url,hash,size\ncat.jpg,https://example.com/foobar.jpg,8d26e24aabb26c02b5c9a9e102308af2a3597a49,44294\nfile.txt,https://example.com/qweasd.txt,da39a3ee5e6b4b0d3255bfef95601890afd80709,0\n'
+```
 
 ## Rationale:
 Such an API would provide the maximum compatibility with Pomf1 and Pomf2 while still implementing all the important features.
