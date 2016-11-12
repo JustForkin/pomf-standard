@@ -3,17 +3,43 @@
 ## Upload API endpoint:
 /upload.php
 
-
 ## POST arguments:
-files[]: 
+### files[]:
 
 **Content-Type:** multipart/form-data
 
 File to upload; multiple values supported.
 
-
 ## GET arguments:
-###	output:
+
+### output:
+
+The output format to use. If not specified, defaults to `json`.
+
+#### json:
+**Content-Type:** application/json
+
+**Schema:**
+```javascript
+{
+	"success": bool /* true if everything is okay, false if there was an error */,
+	"errorcode": int /* only if success=false, the HTTP error code */,
+	"description": string /* only if success=false, the error message */,
+	"files": [{
+		"name": string /* original filename sent by the client */,
+		"url": string /* the complete URL to the uploaded file */,
+		"hash": string /* the SHA-1 hash of the uploaded file */,
+		"size": int /* the bytesize of the uploaded file */
+	}, ...] /* only if success=true, info about uploaded files in the same order they were uploaded */
+}
+```
+Clients *must not* assume a specific ordering of keys in objects nor any presence/absence of whitespace (outside strings); regex is not a good way to parse this.
+
+**Example output:**
+```json 
+{"success": true, "files": [{"name": "cat.jpg", "url": "https://example.com/foobar.jpg", "hash": "8d26e24aabb26c02b5c9a9e102308af2a3597a49", "size": 44294}, {"name": "file.txt", "url": "https://example.com/qweasd.txt", "hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709", "size": 0}]}
+``` 
+
 #### gyazo:
 **Content-Type:** text/plain
 
@@ -33,7 +59,6 @@ Complete URLs to uploaded files in the same order as input files. Each line ends
 ```txt
 https://example.com/foobar.jpg\nhttps://example.com/qweasd.txt\n
 ```
-Protip: if you include input names of uploaded files, how do you handle e.g. newlines in filenames?
 
 #### html:
 **Content-Type:** text/html
@@ -44,30 +69,6 @@ A HTML page containing links to uploaded files. Can be anything and is primarily
 ```html
 <a href="https://example.com/foobar.jpg">https://example.com/foobar.jpg</a><br /><a href="https://example.com/qweasd.txt">https://example.com/qweasd.txt</a><br />
 ```
-
-#### json:
-**Content-Type:** application/json
-
-**Schema:**
-```javascript
-{
-	"success": bool /* true if everything is okay, false if there was an error */,
-		"errorcode": int /* only if success=false, the HTTP error code */,
-		"description": string /* only if success=false, the error message */,
-		"files": [{
-			"name": string /* original filename sent by the client */,
-			"url": string /* the complete URL to the uploaded file */,
-			"hash": string /* the SHA-1 hash of the uploaded file */,
-			"size": int /* the bytesize of the uploaded file */
-		}, ...] /* only if success=true, info about uploaded files in the same order they were uploaded */
-}
-```
-Clients *must not* assume a specific ordering of keys in objects nor any presence/absence of whitespace (outside strings); regex is not a good way to parse this.
-
-**Example output:**
-```json 
-{"success": true, "files": [{"name": "cat.jpg", "url": "https://example.com/foobar.jpg", "hash": "8d26e24aabb26c02b5c9a9e102308af2a3597a49", "size": 44294}, {"name": "file.txt", "url": "https://example.com/qweasd.txt", "hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709", "size": 0}]}
-``` 
 
 #### csv:
 **Content-Type:** text/csv
@@ -85,4 +86,3 @@ name,url,hash,size\ncat.jpg,https://example.com/foobar.jpg,8d26e24aabb26c02b5c9a
 
 ## Rationale:
 Such an API would provide the maximum compatibility with Pomf1 and Pomf2 while still implementing all the important features.
-
